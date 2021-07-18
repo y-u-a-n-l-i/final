@@ -2,6 +2,7 @@ package com.example.tiktok;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"login",Toast.LENGTH_SHORT).show();
+                Constants.name = et_name.getText().toString();
+                Constants.student_id = et_id.getText().toString();
+                Intent intent = new Intent(MainActivity.this, middle.class);
+                startActivity(intent);
             }
         });
     }
