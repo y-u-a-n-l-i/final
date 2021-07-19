@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/login"
     tools:context=".middle">
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +14,7 @@
         <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FDFDFD"
+            android:background="#40FDFDFD"
             app:tabIndicatorColor="#9C27B0"
             app:tabSelectedTextColor="#9C27B0"
             app:tabTextColor="#000000">
@@ -36,6 +37,7 @@
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

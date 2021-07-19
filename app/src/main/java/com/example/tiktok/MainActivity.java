@@ -49,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this,"login",Toast.LENGTH_SHORT).show();
-                Constants.name = et_name.getText().toString();
-                Constants.student_id = et_id.getText().toString();
+                if(!et_name.getText().toString().isEmpty()) Constants.name = et_name.getText().toString();
+                else Constants.name = "李渊";
+                if(!et_id.getText().toString().isEmpty()) Constants.student_id = et_id.getText().toString();
+                else Constants.name = "3190101986";
                 Intent intent = new Intent(MainActivity.this, middle.class);
                 startActivity(intent);
             }

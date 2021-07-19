@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="#00FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout1"
@@ -14,33 +16,45 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        android:background="#00FFFFFF">
 
-        <ImageButton
-            android:id="@+id/imageButtonLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/coverLeft"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.99"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            app:overlayImage="@drawable/bg_round_rect"
+            android:background="#00FFFFFF"/>
 
         <TextView
             android:id="@+id/textViewLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#80000000"
             android:text="TextView"
             android:textColor="@color/white"
-            android:background="#80000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.891"
             app:layout_constraintStart_toStartOf="@+id/constraintLayout1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.953" />
+
+        <Button
+            android:id="@+id/buttonLeft"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"
+            android:text=""
+            app:backgroundTint="#00000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,31 +65,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#00FFFFFF">
 
-        <ImageButton
-            android:id="@+id/imageButtonRight"
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/coverRight"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            app:overlayImage="@drawable/bg_round_rect"
+            android:background="#00FFFFFF"/>
 
         <TextView
             android:id="@+id/textViewRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#80000000"
             android:text="TextView"
             android:textColor="@color/white"
-            android:background="#80000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.108"
             app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.953" />
+
+        <Button
+            android:id="@+id/buttonRight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"
+            android:text=""
+            app:backgroundTint="#00000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
