@@ -15,7 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder> {
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private List<Data> mDataset ;
     private IOnItemClickListener mItemClickListener;
 
@@ -29,16 +29,27 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
     }
 
     @Override
-    public VideoAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+    public VideoAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {
         View root = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cover_item, parent,false);
-        return new MyViewHolder(root);
+        return new VideoViewHolder(root);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.onBind(position, mDataset.get (position * 2), mDataset.get(position * 2 + 1));
+    public void onBindViewHolder(VideoViewHolder holder, final int position) {
+        Data data0, data1;
+        if(position*2<mDataset.size()){
+            data0 = mDataset.get (position * 2);
+        }else{
+            data0 = null;
+        }
+        if(position*2+1<mDataset.size()){
+            data1 = mDataset.get (position * 2+1);
+        }else{
+            data1 = null;
+        }
+        holder.onBind(position, data0, data1);
         holder.setOnClickListenerLeft(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +71,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return (mDataset.size()+1)/2;
     }
 
     public interface IOnItemClickListener {
@@ -70,15 +81,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
         void onItemCLickRight(int position, Data data);
     }
 
-    public VideoAdapter(List<Data> myDataset) {
-        mDataset.addAll(myDataset);
-    }
+//    public VideoAdapter(List<Data> myDataset) {
+//        mDataset.addAll(myDataset);
+//    }
 
     public void setOnItemClickListener(IOnItemClickListener listener) {
         mItemClickListener = listener;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class VideoViewHolder extends RecyclerView.ViewHolder{
         private TextView tvLeft;
         private TextView tvRight;
         private SimpleDraweeView cLeft;
@@ -87,7 +98,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
         private Button bRight;
         private View contentView;
 
-        public MyViewHolder(View v){
+        public VideoViewHolder(View v){
             super(v);
             contentView = v;
             tvLeft = v.findViewById(R.id.textViewLeft);
@@ -99,8 +110,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder
         }
 
         public void onBind(int position, Data dataLeft, Data dataRight){
-            tvLeft.setText(dataLeft.getFrom() + "  " + dataLeft.getUpdatedAt());
-            cLeft.setImageURI(dataLeft.getImageUrl());
+            if(dataLeft!=null) {
+                tvLeft.setText(dataLeft.getFrom() + "  " + dataLeft.getUpdatedAt());
+                cLeft.setImageURI(dataLeft.getImageUrl());
+            }else{
+                tvLeft.setText("");
+                tvLeft.setAlpha(0.0f);
+                bLeft.setEnabled(false);
+                cLeft.setAlpha(0.0f);
+            }
             if(dataRight != null) {
                 tvRight.setText(dataRight.getFrom() + "  " + dataRight.getUpdatedAt());
                 cRight.setImageURI(dataRight.getImageUrl());

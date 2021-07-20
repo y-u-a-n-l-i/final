@@ -10,22 +10,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tiktok.Adapter.UserVideoAdapter;
 import com.example.tiktok.Adapter.VideoAdapter;
 import com.example.tiktok.Constants;
 import com.example.tiktok.Data.Data;
 import com.example.tiktok.Data.DataListResponse;
-import com.example.tiktok.MainActivity;
-import com.example.tiktok.MiddleActivity;
+import com.example.tiktok.Data.DataUtil;
 import com.example.tiktok.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -37,48 +41,66 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClickListener{
+public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemClickListener{
 
     private List<Data> msg = new ArrayList<>();
     private RecyclerView videoView;
-    private VideoAdapter videoAdapter;
+    private UserVideoAdapter videoAdapter;
+    private TextView tvname;
+    private TextView tvid;
+    private SimpleDraweeView cover0;
+    private Button lunch;
 
-    public VideoFragment() {
+    public MineFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View myView = inflater.inflate(R.layout.fragment_video, container, false);
+        View myView = inflater.inflate(R.layout.fragment_mine, container, false);
 
-        videoView = myView.findViewById(R.id.video_recycle);
+        videoView = myView.findViewById(R.id.mine_recycle);
+        tvname = myView.findViewById(R.id.mine_name);
+        tvid = myView.findViewById(R.id.mine_id);
+        lunch = myView.findViewById(R.id.mine_button);
+        cover0 = myView.findViewById(R.id.cover0);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
-        videoAdapter = new VideoAdapter();
+        videoAdapter = new UserVideoAdapter();
         videoAdapter.setOnItemClickListener(this);
 
-        getData(null);
+        getData(Constants.student_id);
         //videoAdapter.setData(msg);
+        if(!msg.isEmpty()){
+            cover0.setImageURI(msg.get(0).getImageUrl());
+        }
         videoView.setAdapter(videoAdapter);
+        tvname.setText(Constants.name);
+        tvid.setText(Constants.student_id);
         return myView;
     }
 
     @Override
-    public void onItemCLickLeft(int position, Data data) {
-        Toast.makeText(this.getActivity(),"click on the left on: " + position, Toast.LENGTH_SHORT).show();
+    public void onItemCLick0(int position, Data data) {
+        Toast.makeText(getActivity(), "click on 0 : " + position, Toast.LENGTH_SHORT).show();
+        DataUtil.data = data;
     }
-
     @Override
-    public void onItemCLickRight(int position, Data data) {
-        Toast.makeText(this.getActivity(),"click on the right on: " + position, Toast.LENGTH_SHORT).show();
+    public void onItemCLick1(int position, Data data) {
+        Toast.makeText(getActivity(), "click on 1 : " + position, Toast.LENGTH_SHORT).show();
+        DataUtil.data = data;
+    }
+    @Override
+    public void onItemCLick2(int position, Data data) {
+        Toast.makeText(getActivity(), "click on 2 : " + position, Toast.LENGTH_SHORT).show();
+        DataUtil.data = data;
     }
 
     private void getData(String studentId){
@@ -87,14 +109,14 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
             @Override
             public void run() {
                 msg = baseGetDataFromRemote(studentId);
-               if (msg != null && !msg.isEmpty()) {
-                   new Handler(getActivity().getMainLooper()).post(new Runnable() {
-                       @Override
+                if (msg != null && !msg.isEmpty()) {
+                    new Handler(getActivity().getMainLooper()).post(new Runnable() {
+                        @Override
                         public void run() {
                             videoAdapter.setData(msg);
                         }
                     });
-               }
+                }
             }
         }).start();
     }

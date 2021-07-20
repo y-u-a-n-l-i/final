@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.example.tiktok.Adapter.VideoAdapter;
 import com.example.tiktok.Data.Data;
 import com.example.tiktok.Data.DataListResponse;
+import com.example.tiktok.Fragment.MineFragment;
+import com.example.tiktok.Fragment.UserFragment;
 import com.example.tiktok.Fragment.VideoFragment;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.tabs.TabLayout;
@@ -45,7 +47,7 @@ public class MiddleActivity extends AppCompatActivity {
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_middle);
-        ViewPager pager = findViewById(R.id.view_pager);
+        ViewPager pager = findViewById(R.id.view_pager1);
         TabLayout tab = findViewById(R.id.tab_layout);
 
         titleList = new ArrayList<>();
@@ -54,8 +56,8 @@ public class MiddleActivity extends AppCompatActivity {
         titleList.add("Mine");
         fragList = new ArrayList<>();
         fragList.add(new VideoFragment());
-        fragList.add(new VideoFragment());
-        fragList.add(new VideoFragment());
+        fragList.add(new UserFragment());
+        fragList.add(new MineFragment());
 
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
