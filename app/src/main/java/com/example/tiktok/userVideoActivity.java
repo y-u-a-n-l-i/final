@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.os.Build;
@@ -40,6 +41,7 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
     private List<Data> msg = new ArrayList<>();
     private RecyclerView userView;
     private UserVideoAdapter userAdapter = new UserVideoAdapter();
+    private SwipeRefreshLayout swip_refresh_layout;
 
     public userVideoActivity() {
         // Required empty public constructor
@@ -50,6 +52,7 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_video);
+        swip_refresh_layout=findViewById(R.id.user_video_swipe);
         userView = findViewById(R.id.uservideo_recycle);
         userView.setLayoutManager(new LinearLayoutManager(this));
         userView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
@@ -57,6 +60,20 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
         userAdapter.setOnItemClickListener(this);
         userView.setAdapter(userAdapter);
         getData();
+
+        swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getData();
+                        swip_refresh_layout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
+
         //userAdapter.setData(msg);
     }
 
@@ -87,6 +104,7 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
                         @Override
                         public void run() {
                             userAdapter.setData(msg);
+
                         }
                     });
                 }

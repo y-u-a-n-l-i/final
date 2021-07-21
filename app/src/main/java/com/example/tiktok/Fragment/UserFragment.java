@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
     private List<Data> msg = new ArrayList<>();
     private RecyclerView userView;
     private UserAdapter userAdapter;
+    private SwipeRefreshLayout swip_refresh_layout;
 
     public UserFragment() {
         // Required empty public constructor
@@ -58,7 +60,7 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_user, container, false);
-
+        swip_refresh_layout=myView.findViewById(R.id.user_swipe);
         userView = myView.findViewById(R.id.user_recycle_view);
         userView.setLayoutManager(new LinearLayoutManager(getContext()));
         userView.setHasFixedSize(true);
@@ -69,6 +71,20 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
         getData(null);
         //userAdapter.setData(msg);
         userView.setAdapter(userAdapter);
+
+        swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getData(null);
+                        swip_refresh_layout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
+
         return myView;
     }
 

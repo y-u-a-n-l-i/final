@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     private TextView tvid;
     private SimpleDraweeView cover0;
     private Button lunch;
+    private SwipeRefreshLayout swip_refresh_layout;
 
     public MineFragment() {
         // Required empty public constructor
@@ -64,7 +66,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_mine, container, false);
-
+        swip_refresh_layout=myView.findViewById(R.id.mine_swipe);
         videoView = myView.findViewById(R.id.mine_recycle);
         tvname = myView.findViewById(R.id.mine_name);
         tvid = myView.findViewById(R.id.mine_id);
@@ -78,13 +80,32 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
         getData(Constants.student_id);
         //videoAdapter.setData(msg);
-        if(!msg.isEmpty()){
-            cover0.setImageURI(msg.get(0).getImageUrl());
-        }
         videoView.setAdapter(videoAdapter);
         tvname.setText(Constants.name);
         tvid.setText(Constants.student_id);
+
+        swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getData(Constants.student_id);
+                        swip_refresh_layout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
+
         return myView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!msg.isEmpty()) {
+            cover0.setImageURI(msg.get(0).getImageUrl());
+        }
     }
 
     @Override
