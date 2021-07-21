@@ -7,21 +7,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.tiktok.Adapter.UserAdapter;
 import com.example.tiktok.Adapter.UserVideoAdapter;
-import com.example.tiktok.Data.Data;
-import com.example.tiktok.Data.DataListResponse;
-import com.example.tiktok.Data.DataUtil;
+import com.example.tiktok.Data.PostData;
+import com.example.tiktok.Data.PostDataListResponse;
+import com.example.tiktok.Data.PostDataUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,16 +30,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class userVideoActivity extends AppCompatActivity implements UserVideoAdapter.IOnItemClickListener {
+public class UserVideoActivity extends AppCompatActivity implements UserVideoAdapter.IOnItemClickListener {
 
-    private List<Data> msg = new ArrayList<>();
+    private List<PostData> msg = new ArrayList<>();
     private RecyclerView userView;
     private UserVideoAdapter userAdapter = new UserVideoAdapter();
     private SwipeRefreshLayout swip_refresh_layout;
 
-    public userVideoActivity() {
+    public UserVideoActivity() {
         // Required empty public constructor
     }
 
@@ -78,19 +73,25 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
     }
 
     @Override
-    public void onItemCLick0(int position, Data data) {
+    public void onItemCLick0(int position, PostData data) {
         Toast.makeText(this, "click on 0 : " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.data = data;
+        PostDataUtil.data = data;
+        Intent intent = new Intent(this, VideoPlayActivity.class);
+        startActivity(intent);
     }
     @Override
-    public void onItemCLick1(int position, Data data) {
+    public void onItemCLick1(int position, PostData data) {
         Toast.makeText(this, "click on 1 : " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.data = data;
+        PostDataUtil.data = data;
+        Intent intent = new Intent(this, VideoPlayActivity.class);
+        startActivity(intent);
     }
     @Override
-    public void onItemCLick2(int position, Data data) {
+    public void onItemCLick2(int position, PostData data) {
         Toast.makeText(this, "click on 2 : " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.data = data;
+        PostDataUtil.data = data;
+        Intent intent = new Intent(this, VideoPlayActivity.class);
+        startActivity(intent);
     }
 
     private void getData() {
@@ -98,13 +99,13 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void run() {
+                msg.clear();
                 msg = baseGetDataFromRemote();
                 if (msg != null && !msg.isEmpty()) {
                     new Handler(getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             userAdapter.setData(msg);
-
                         }
                     });
                 }
@@ -114,12 +115,12 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<Data> baseGetDataFromRemote() {
-        String urlStr = String.format("https://api-android-camp.bytedance.com/zju/invoke/messages/");
-        List<Data> result = null;
+    public List<PostData> baseGetDataFromRemote() {
+        String urlStr = String.format(Constants.BASE_URL + "video");
+        List<PostData> result = null;
         try {
             URL url;
-            if (DataUtil.user.getStudentId() != null) url = new URL(urlStr + "?" + "student_id=" + DataUtil.user.getStudentId());
+            if (PostDataUtil.user.getStudentId() != null) url = new URL(urlStr + "?" + "student_id=" + PostDataUtil.user.getStudentId());
             else url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(6000);
@@ -130,8 +131,8 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
 
                 InputStream in = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                DataListResponse msg;
-                msg = new Gson().fromJson(reader, new TypeToken<DataListResponse>() {
+                PostDataListResponse msg;
+                msg = new Gson().fromJson(reader, new TypeToken<PostDataListResponse>() {
                 }.getType());
                 result = msg.feeds;
                 reader.close();
@@ -143,7 +144,7 @@ public class userVideoActivity extends AppCompatActivity implements UserVideoAda
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(userVideoActivity.this, "网络异常" + e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserVideoActivity.this, "网络异常" + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@mipmap/login"
-    tools:context=".userVideoActivity">
+    tools:context=".UserVideoActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/uservideo_recycle"

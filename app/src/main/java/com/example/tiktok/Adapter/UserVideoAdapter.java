@@ -5,28 +5,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tiktok.Data.Data;
+import com.bumptech.glide.Glide;
+import com.example.tiktok.Data.PostData;
 import com.example.tiktok.R;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.UserVideoViewHolder> {
-    private List<Data> mDataset ;
+    private List<PostData> mDataset ;
     private UserVideoAdapter.IOnItemClickListener mItemClickListener;
 
     public UserVideoAdapter() {
         mDataset = new ArrayList<>();
     }
 
-    public void setData(List<Data> list){
+    public void setData(List<PostData> list){
         mDataset = list;
         notifyDataSetChanged();
+    }
+
+    public void clearData(){
+        mDataset.clear();
     }
 
     @Override
@@ -39,7 +44,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
 
     @Override
     public void onBindViewHolder(UserVideoAdapter.UserVideoViewHolder holder, final int position) {
-        Data data0, data1,data2;
+        PostData data0, data1,data2;
         if(position*3<mDataset.size()){
             data0 = mDataset.get (position * 3);
         }else{
@@ -89,11 +94,11 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
 
     public interface IOnItemClickListener {
 
-        void onItemCLick0(int position, Data data);
+        void onItemCLick0(int position, PostData data);
 
-        void onItemCLick1(int position, Data data);
+        void onItemCLick1(int position, PostData data);
 
-        void onItemCLick2(int position, Data data);
+        void onItemCLick2(int position, PostData data);
     }
 
 //    public VideoAdapter(List<Data> myDataset) {
@@ -108,9 +113,9 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
         private TextView tv0;
         private TextView tv1;
         private TextView tv2;
-        private SimpleDraweeView c0;
-        private SimpleDraweeView c1;
-        private SimpleDraweeView c2;
+        private ImageView c0;
+        private ImageView c1;
+        private ImageView c2;
         private Button b0;
         private Button b1;
         private Button b2;
@@ -130,10 +135,11 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             b2 = v.findViewById(R.id.button2);
         }
 
-        public void onBind(int position, Data data0, Data data1, Data data2){
+        public void onBind(int position, PostData data0, PostData data1, PostData data2){
             if(data0!= null) {
                 tv0.setText(data0.getUpdatedAt().toString());
-                c0.setImageURI(data0.getImageUrl());
+//                c0.setImageURI(data0.getImageUrl());
+                Glide.with(contentView).load(data0.getImageUrl()).into(c0);
             }else{
                 tv0.setText("");
                 tv0.setAlpha(0.0f);
@@ -142,7 +148,8 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             }
             if(data1!= null) {
                 tv1.setText(data1.getUpdatedAt().toString());
-                c1.setImageURI(data1.getImageUrl());
+//                c1.setImageURI(data1.getImageUrl());
+                Glide.with(contentView).load(data1.getImageUrl()).into(c1);
             }else{
                 tv1.setText("");
                 tv1.setAlpha(0.0f);
@@ -151,7 +158,8 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             }
             if(data2!= null) {
                 tv2.setText(data2.getUpdatedAt().toString());
-                c2.setImageURI(data2.getImageUrl());
+//                c2.setImageURI(data2.getImageUrl());
+                Glide.with(contentView).load(data2.getImageUrl()).into(c2);
             }else{
                 tv2.setText("");
                 tv2.setAlpha(0.0f);

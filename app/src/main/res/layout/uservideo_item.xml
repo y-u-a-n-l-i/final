@@ -20,16 +20,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/cover0"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:overlayImage="@drawable/bg_round_rect" />
+            android:background="@drawable/bg_round_rect"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textView0"
@@ -72,16 +74,18 @@
         app:layout_constraintStart_toEndOf="@+id/uservideo0"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/cover1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:overlayImage="@drawable/bg_round_rect" />
+            app:background="@drawable/bg_round_rect"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textView1"
@@ -125,16 +129,18 @@
         app:layout_constraintStart_toEndOf="@+id/uservideo1"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/cover2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:overlayImage="@drawable/bg_round_rect" />
+            android:background="@drawable/bg_round_rect"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textView2"

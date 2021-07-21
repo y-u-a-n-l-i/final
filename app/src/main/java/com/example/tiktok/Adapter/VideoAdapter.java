@@ -5,27 +5,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.tiktok.Data.Data;
+
+import com.bumptech.glide.Glide;
+import com.example.tiktok.Data.PostData;
 import com.example.tiktok.R;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
-    private List<Data> mDataset ;
+    private List<PostData> mDataset ;
     private IOnItemClickListener mItemClickListener;
 
     public VideoAdapter() {
         mDataset = new ArrayList<>();
     }
 
-    public void setData(List<Data> list){
+    public void setData(List<PostData> list){
         mDataset = list;
         notifyDataSetChanged();
+    }
+
+    public void clearData(){
+        mDataset.clear();
     }
 
     @Override
@@ -38,7 +44,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public void onBindViewHolder(VideoViewHolder holder, final int position) {
-        Data data0, data1;
+        PostData data0, data1;
         if(position*2<mDataset.size()){
             data0 = mDataset.get (position * 2);
         }else{
@@ -76,9 +82,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     public interface IOnItemClickListener {
 
-        void onItemCLickLeft(int position, Data data);
+        void onItemCLickLeft(int position, PostData data);
 
-        void onItemCLickRight(int position, Data data);
+        void onItemCLickRight(int position, PostData data);
     }
 
 //    public VideoAdapter(List<Data> myDataset) {
@@ -92,8 +98,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public class VideoViewHolder extends RecyclerView.ViewHolder{
         private TextView tvLeft;
         private TextView tvRight;
-        private SimpleDraweeView cLeft;
-        private SimpleDraweeView cRight;
+        private ImageView cLeft;
+        private ImageView cRight;
         private Button bLeft;
         private Button bRight;
         private View contentView;
@@ -109,10 +115,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             bRight = v.findViewById(R.id.buttonRight);
         }
 
-        public void onBind(int position, Data dataLeft, Data dataRight){
+        public void onBind(int position, PostData dataLeft, PostData dataRight){
             if(dataLeft!=null) {
                 tvLeft.setText(dataLeft.getFrom() + "  " + dataLeft.getUpdatedAt());
-                cLeft.setImageURI(dataLeft.getImageUrl());
+//                cLeft.setImageURI(dataLeft.getImageUrl());
+                Glide.with(contentView).load(dataLeft.getImageUrl()).into(cLeft);
             }else{
                 tvLeft.setText("");
                 tvLeft.setAlpha(0.0f);
@@ -121,7 +128,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             }
             if(dataRight != null) {
                 tvRight.setText(dataRight.getFrom() + "  " + dataRight.getUpdatedAt());
-                cRight.setImageURI(dataRight.getImageUrl());
+//                cRight.setImageURI(dataRight.getImageUrl());
+                Glide.with(contentView).load(dataRight.getImageUrl()).into(cRight);
             }else{
                 tvRight.setText("");
                 tvRight.setAlpha(0.0f);

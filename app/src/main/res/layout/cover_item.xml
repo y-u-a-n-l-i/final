@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.0"
         android:background="#00FFFFFF">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/coverLeft"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,8 +27,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:overlayImage="@drawable/bg_round_rect"
-            android:background="#00FFFFFF"/>
+            android:background="@drawable/bg_round_rect"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="add"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textViewLeft"
@@ -68,7 +70,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="#00FFFFFF">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/coverRight"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -76,8 +78,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:overlayImage="@drawable/bg_round_rect"
-            android:background="#00FFFFFF"/>
+            android:background="@drawable/bg_round_rect"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="add"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textViewRight"

@@ -1,5 +1,6 @@
 package com.example.tiktok.Fragment;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,22 +16,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.tiktok.Adapter.UserVideoAdapter;
-import com.example.tiktok.Adapter.VideoAdapter;
 import com.example.tiktok.Constants;
-import com.example.tiktok.Data.Data;
-import com.example.tiktok.Data.DataListResponse;
-import com.example.tiktok.Data.DataUtil;
+import com.example.tiktok.Data.PostData;
+import com.example.tiktok.Data.PostDataListResponse;
+import com.example.tiktok.Data.PostDataUtil;
 import com.example.tiktok.R;
+import com.example.tiktok.VideoPlayActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -44,12 +45,12 @@ import java.util.Objects;
 
 public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemClickListener{
 
-    private List<Data> msg = new ArrayList<>();
+    private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
     private UserVideoAdapter videoAdapter;
     private TextView tvname;
     private TextView tvid;
-    private SimpleDraweeView cover0;
+    private ImageView cover0;
     private Button lunch;
     private SwipeRefreshLayout swip_refresh_layout;
 
@@ -101,27 +102,25 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!msg.isEmpty()) {
-            cover0.setImageURI(msg.get(0).getImageUrl());
-        }
-    }
-
-    @Override
-    public void onItemCLick0(int position, Data data) {
+    public void onItemCLick0(int position, PostData data) {
         Toast.makeText(getActivity(), "click on 0 : " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.data = data;
+        PostDataUtil.data = data;
+        Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+        startActivity(intent);
     }
     @Override
-    public void onItemCLick1(int position, Data data) {
+    public void onItemCLick1(int position, PostData data) {
         Toast.makeText(getActivity(), "click on 1 : " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.data = data;
+        PostDataUtil.data = data;
+        Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+        startActivity(intent);
     }
     @Override
-    public void onItemCLick2(int position, Data data) {
+    public void onItemCLick2(int position, PostData data) {
         Toast.makeText(getActivity(), "click on 2 : " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.data = data;
+        PostDataUtil.data = data;
+        Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+        startActivity(intent);
     }
 
     private void getData(String studentId){
@@ -129,12 +128,15 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void run() {
+                msg.clear();
                 msg = baseGetDataFromRemote(studentId);
                 if (msg != null && !msg.isEmpty()) {
                     new Handler(getActivity().getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+                            videoAdapter.clearData();
                             videoAdapter.setData(msg);
+                            Glide.with(MineFragment.this).load(msg.get(0).getImageUrl()).into(cover0);
                         }
                     });
                 }
@@ -144,9 +146,9 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<Data> baseGetDataFromRemote(String studentId) {
-        String urlStr = String.format("https://api-android-camp.bytedance.com/zju/invoke/messages/");
-        List<Data> result = null;
+    public List<PostData> baseGetDataFromRemote(String studentId) {
+        String urlStr = String.format(Constants.BASE_URL + "video");
+        List<PostData> result = null;
         try {
             URL url;
             if(studentId != null) url = new URL(urlStr + "?" + "student_id=" + studentId);
@@ -160,8 +162,8 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
                 InputStream in = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                DataListResponse msg;
-                msg = new Gson().fromJson(reader, new TypeToken<DataListResponse>() {
+                PostDataListResponse msg;
+                msg = new Gson().fromJson(reader, new TypeToken<PostDataListResponse>() {
                 }.getType());
                 result = msg.feeds;
                 reader.close();

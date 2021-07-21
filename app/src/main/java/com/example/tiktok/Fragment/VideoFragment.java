@@ -1,5 +1,6 @@
 package com.example.tiktok.Fragment;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +20,11 @@ import android.widget.Toast;
 
 import com.example.tiktok.Adapter.VideoAdapter;
 import com.example.tiktok.Constants;
-import com.example.tiktok.Data.Data;
-import com.example.tiktok.Data.DataListResponse;
-import com.example.tiktok.MainActivity;
-import com.example.tiktok.MiddleActivity;
+import com.example.tiktok.Data.PostData;
+import com.example.tiktok.Data.PostDataListResponse;
+import com.example.tiktok.Data.PostDataUtil;
 import com.example.tiktok.R;
+import com.example.tiktok.VideoPlayActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -40,7 +40,7 @@ import java.util.Objects;
 
 public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClickListener{
 
-    private List<Data> msg = new ArrayList<>();
+    private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
     private VideoAdapter videoAdapter;
     private SwipeRefreshLayout swip_refresh_layout;
@@ -88,13 +88,19 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
     }
 
     @Override
-    public void onItemCLickLeft(int position, Data data) {
+    public void onItemCLickLeft(int position, PostData data) {
         Toast.makeText(this.getActivity(),"click on the left on: " + position, Toast.LENGTH_SHORT).show();
+        PostDataUtil.data = data;
+        Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+        startActivity(intent);
     }
 
     @Override
-    public void onItemCLickRight(int position, Data data) {
+    public void onItemCLickRight(int position, PostData data) {
         Toast.makeText(this.getActivity(),"click on the right on: " + position, Toast.LENGTH_SHORT).show();
+        PostDataUtil.data = data;
+        Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+        startActivity(intent);
     }
 
     private void getData(String studentId){
@@ -102,12 +108,14 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void run() {
+                msg.clear();
                 msg = baseGetDataFromRemote(studentId);
                if (msg != null && !msg.isEmpty()) {
                    new Handler(getActivity().getMainLooper()).post(new Runnable() {
                        @Override
                         public void run() {
-                            videoAdapter.setData(msg);
+                           videoAdapter.clearData();
+                           videoAdapter.setData(msg);
                         }
                     });
                }
@@ -117,9 +125,9 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<Data> baseGetDataFromRemote(String studentId) {
-        String urlStr = String.format("https://api-android-camp.bytedance.com/zju/invoke/messages/");
-        List<Data> result = null;
+    public List<PostData> baseGetDataFromRemote(String studentId) {
+        String urlStr = String.format(Constants.BASE_URL + "video");
+        List<PostData> result = null;
         try {
             URL url;
             if(studentId != null) url = new URL(urlStr + "?" + "student_id=" + studentId);
@@ -133,8 +141,8 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
 
                 InputStream in = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                DataListResponse msg;
-                msg = new Gson().fromJson(reader, new TypeToken<DataListResponse>() {
+                PostDataListResponse msg;
+                msg = new Gson().fromJson(reader, new TypeToken<PostDataListResponse>() {
                 }.getType());
                 result = msg.feeds;
                 reader.close();

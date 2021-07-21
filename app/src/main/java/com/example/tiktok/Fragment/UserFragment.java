@@ -19,13 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.tiktok.Adapter.UserAdapter;
-import com.example.tiktok.Adapter.VideoAdapter;
 import com.example.tiktok.Constants;
-import com.example.tiktok.Data.Data;
-import com.example.tiktok.Data.DataListResponse;
-import com.example.tiktok.Data.DataUtil;
+import com.example.tiktok.Data.PostData;
+import com.example.tiktok.Data.PostDataListResponse;
+import com.example.tiktok.Data.PostDataUtil;
 import com.example.tiktok.R;
-import com.example.tiktok.userVideoActivity;
+import com.example.tiktok.UserVideoActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,7 +41,7 @@ import java.util.Objects;
 
 public class UserFragment extends Fragment implements UserAdapter.IOnItemClickListener {
 
-    private List<Data> msg = new ArrayList<>();
+    private List<PostData> msg = new ArrayList<>();
     private RecyclerView userView;
     private UserAdapter userAdapter;
     private SwipeRefreshLayout swip_refresh_layout;
@@ -89,10 +88,10 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
     }
 
     @Override
-    public void onItemCLick(int position, Data data) {
+    public void onItemCLick(int position, PostData data) {
         Toast.makeText(this.getActivity(), "click on: " + position, Toast.LENGTH_SHORT).show();
-        DataUtil.user = data;
-        Intent intent = new Intent(getActivity(), userVideoActivity.class);
+        PostDataUtil.user = data;
+        Intent intent = new Intent(getActivity(), UserVideoActivity.class);
         startActivity(intent);
     }
 
@@ -101,11 +100,13 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void run() {
+                msg.clear();
                 msg = baseGetDataFromRemote(studentId);
                 if (msg != null && !msg.isEmpty()) {
                     new Handler(getActivity().getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+                            userAdapter.clearData();
                             userAdapter.setData(msg);
                         }
                     });
@@ -116,9 +117,9 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<Data> baseGetDataFromRemote(String studentId) {
-        String urlStr = String.format("https://api-android-camp.bytedance.com/zju/invoke/messages/");
-        List<Data> result = null;
+    public List<PostData> baseGetDataFromRemote(String studentId) {
+        String urlStr = String.format(Constants.BASE_URL + "video");
+        List<PostData> result = null;
         try {
             URL url;
             if (studentId != null) url = new URL(urlStr + "?" + "student_id=" + studentId);
@@ -132,8 +133,8 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
 
                 InputStream in = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                DataListResponse msg;
-                msg = new Gson().fromJson(reader, new TypeToken<DataListResponse>() {
+                PostDataListResponse msg;
+                msg = new Gson().fromJson(reader, new TypeToken<PostDataListResponse>() {
                 }.getType());
                 result = msg.feeds;
                 reader.close();
