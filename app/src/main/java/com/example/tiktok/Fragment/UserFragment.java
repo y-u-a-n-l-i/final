@@ -1,5 +1,6 @@
 package com.example.tiktok.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.tiktok.Adapter.UserAdapter;
@@ -80,7 +82,7 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
                         getData(null);
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },2000);
+                },3000);
             }
         });
 

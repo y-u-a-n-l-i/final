@@ -62,10 +62,14 @@ public class UserVideoActivity extends AppCompatActivity implements UserVideoAda
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getData();
+                        try{
+                            getData();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },2000);
+                },3000);
             }
         });
 

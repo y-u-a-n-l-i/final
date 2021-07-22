@@ -64,31 +64,42 @@
 
         <Button
             android:id="@+id/mine_button"
-            android:layout_width="105dp"
-            android:layout_height="50dp"
+            android:layout_width="104dp"
+            android:layout_height="55dp"
             android:background="@drawable/button_circle_button"
-            android:text="发布"
-            app:backgroundTint="#B05A1414"
+            android:text="upload videos"
+            app:backgroundTint="#FC850404"
             app:backgroundTintMode="add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.76"
+            app:layout_constraintHorizontal_bias="0.757"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.77" />
+            app:layout_constraintVertical_bias="0.7" />
+
+        <Switch
+            android:id="@+id/auto_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="auto upload"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.805"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.914" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mine_swipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_layout"
-        android:orientation="vertical"
-        android:id="@+id/mine_swipe">
+        app:layout_constraintTop_toBottomOf="@+id/mine_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mine_recycle"

@@ -77,10 +77,14 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getData(null);
+                        try{
+                            getData(null);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },2000);
+                },3000);
             }
         });
 

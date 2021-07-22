@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,9 @@ import com.example.tiktok.Constants;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
+import com.example.tiktok.MiddleActivity;
 import com.example.tiktok.R;
+import com.example.tiktok.RecordActivity;
 import com.example.tiktok.VideoPlayActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
@@ -52,6 +55,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     private TextView tvid;
     private ImageView cover0;
     private Button lunch;
+    private Switch sw1;
     private SwipeRefreshLayout swip_refresh_layout;
 
     public MineFragment() {
@@ -73,12 +77,13 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         tvid = myView.findViewById(R.id.mine_id);
         lunch = myView.findViewById(R.id.mine_button);
         cover0 = myView.findViewById(R.id.cover0);
+        sw1 = myView.findViewById(R.id.auto_switch);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
         videoAdapter = new UserVideoAdapter();
         videoAdapter.setOnItemClickListener(this);
-
+        Constants.auto_upload = sw1.isChecked();
         getData(Constants.student_id);
         //videoAdapter.setData(msg);
         videoView.setAdapter(videoAdapter);
@@ -91,15 +96,32 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getData(Constants.student_id);
+                        try{
+                            try{
+                                getData(Constants.student_id);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },2000);
+                },3000);
+            }
+        });
+
+        lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RecordActivity.class);
+                startActivity(intent);
             }
         });
 
         return myView;
     }
+
 
     @Override
     public void onItemCLick0(int position, PostData data) {
