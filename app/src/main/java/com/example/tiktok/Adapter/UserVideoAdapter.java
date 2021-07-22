@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.R;
 
@@ -45,6 +47,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
     @Override
     public void onBindViewHolder(UserVideoAdapter.UserVideoViewHolder holder, final int position) {
         PostData data0, data1,data2;
+        System.out.println(position);
         if(position*3<mDataset.size()){
             data0 = mDataset.get (position * 3);
         }else{
@@ -65,7 +68,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemCLick0(position, mDataset.get(position*3));
+                    mItemClickListener.onItemCLick0(position, data0);
                 }
             }
         });
@@ -73,7 +76,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemCLick1(position, mDataset.get(position*3+1));
+                    mItemClickListener.onItemCLick1(position, data1);
                 }
             }
         });
@@ -81,7 +84,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemCLick2(position, mDataset.get(position*3+2));
+                    mItemClickListener.onItemCLick2(position, data2);
                 }
             }
         });
@@ -139,32 +142,30 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             if(data0!= null) {
                 tv0.setText(data0.getUpdatedAt().toString());
 //                c0.setImageURI(data0.getImageUrl());
-                Glide.with(contentView).load(data0.getImageUrl()).into(c0);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                Glide.with(contentView).load(data0.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c0);
             }else{
                 tv0.setText("");
-                tv0.setAlpha(0.0f);
                 b0.setEnabled(false);
-                c0.setAlpha(0.0f);
             }
             if(data1!= null) {
                 tv1.setText(data1.getUpdatedAt().toString());
 //                c1.setImageURI(data1.getImageUrl());
-                Glide.with(contentView).load(data1.getImageUrl()).into(c1);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                Glide.with(contentView).load(data1.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c1);
             }else{
                 tv1.setText("");
-                tv1.setAlpha(0.0f);
                 b1.setEnabled(false);
-                c1.setAlpha(0.0f);
             }
             if(data2!= null) {
                 tv2.setText(data2.getUpdatedAt().toString());
 //                c2.setImageURI(data2.getImageUrl());
-                Glide.with(contentView).load(data2.getImageUrl()).into(c2);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                Glide.with(contentView).load(data2.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c2);
             }else{
+                System.out.println("data2 == null "+position);
                 tv2.setText("");
-                tv2.setAlpha(0.0f);
                 b2.setEnabled(false);
-                c2.setAlpha(0.0f);
             }
         }
 

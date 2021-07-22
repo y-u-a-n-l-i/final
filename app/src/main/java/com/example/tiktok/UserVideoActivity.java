@@ -51,7 +51,6 @@ public class UserVideoActivity extends AppCompatActivity implements UserVideoAda
         userView = findViewById(R.id.uservideo_recycle);
         userView.setLayoutManager(new LinearLayoutManager(this));
         userView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
-        userAdapter = new UserVideoAdapter();
         userAdapter.setOnItemClickListener(this);
         userView.setAdapter(userAdapter);
         getData();
@@ -62,10 +61,14 @@ public class UserVideoActivity extends AppCompatActivity implements UserVideoAda
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getData();
+                        try{
+                            getData();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },2000);
+                },3000);
             }
         });
 

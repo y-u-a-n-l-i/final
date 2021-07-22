@@ -7,8 +7,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<<<<<<< HEAD
 
     <uses-feature android:name="android.hardware.camera.any" />
+=======
+>>>>>>> origin/master
 
     <application
         android:allowBackup="true"
@@ -18,10 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tiktok">
         <activity android:name=".CustomRecordActivity"></activity>
+<<<<<<< HEAD
         <activity
             android:name=".VideoPlayActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
+=======
+        <activity android:name=".RecordActivity" />
+        <activity android:name=".VideoPlayActivity" />
+>>>>>>> origin/master
         <activity android:name=".UserVideoActivity" />
         <activity android:name=".MiddleActivity" />
         <activity android:name=".MainActivity">
@@ -31,6 +39,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

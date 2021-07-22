@@ -25,15 +25,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.example.tiktok.Adapter.UserVideoAdapter;
 import com.example.tiktok.Constants;
 import com.example.tiktok.CustomRecordActivity;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
+<<<<<<< HEAD
 import com.example.tiktok.Database.VideoContract;
 import com.example.tiktok.Database.VideoDbHelper;
+=======
+import com.example.tiktok.MiddleActivity;
+>>>>>>> origin/master
 import com.example.tiktok.R;
+import com.example.tiktok.RecordActivity;
 import com.example.tiktok.VideoPlayActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
@@ -55,11 +62,12 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
     private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
-    private UserVideoAdapter videoAdapter;
+    private UserVideoAdapter videoAdapter = new UserVideoAdapter();
     private TextView tvname;
     private TextView tvid;
     private ImageView cover0;
     private Button lunch;
+    private Switch sw1;
     private SwipeRefreshLayout swip_refresh_layout;
     private Switch sw1;
 
@@ -89,10 +97,10 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         lunch = myView.findViewById(R.id.mine_button);
         sw1 = myView.findViewById(R.id.auto_switch);
         cover0 = myView.findViewById(R.id.cover0);
+        sw1 = myView.findViewById(R.id.auto_switch);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
-        videoAdapter = new UserVideoAdapter();
         videoAdapter.setOnItemClickListener(this);
 
         //getDataFromNetWork(Constants.student_id);
@@ -114,11 +122,31 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+<<<<<<< HEAD
                         getDataFromWatchHistory();
                         //getDataFromNetWork(Constants.student_id);
+=======
+                        try{
+                            try{
+                                getData(Constants.student_id);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+>>>>>>> origin/master
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },2000);
+                },3000);
+            }
+        });
+
+        lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CustomRecordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -132,6 +160,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
         return myView;
     }
+
 
     @Override
     public void onItemCLick0(int position, PostData data) {
@@ -162,13 +191,14 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
             public void run() {
                 msg.clear();
                 msg = baseGetDataFromRemote(studentId);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
                 if (msg != null && !msg.isEmpty()) {
                     new Handler(getActivity().getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             videoAdapter.clearData();
                             videoAdapter.setData(msg);
-                            Glide.with(MineFragment.this).load(msg.get(0).getImageUrl()).into(cover0);
+                            Glide.with(MineFragment.this).load(msg.get(0).getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cover0);
                         }
                     });
                 }
