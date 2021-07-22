@@ -52,7 +52,3 @@ public class PathUtils {
         return null;
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
