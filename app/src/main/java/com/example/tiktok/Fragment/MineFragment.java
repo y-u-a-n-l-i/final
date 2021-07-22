@@ -1,6 +1,8 @@
 package com.example.tiktok.Fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,15 +20,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.tiktok.Adapter.UserVideoAdapter;
 import com.example.tiktok.Constants;
+import com.example.tiktok.CustomRecordActivity;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
+import com.example.tiktok.Database.VideoContract;
+import com.example.tiktok.Database.VideoDbHelper;
 import com.example.tiktok.R;
 import com.example.tiktok.VideoPlayActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -40,6 +46,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +61,11 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     private ImageView cover0;
     private Button lunch;
     private SwipeRefreshLayout swip_refresh_layout;
+    private Switch sw1;
+
+    //database
+    private VideoDbHelper dbHelper;
+    private SQLiteDatabase database;
 
     public MineFragment() {
         // Required empty public constructor
@@ -61,6 +74,8 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new VideoDbHelper(MineFragment.this.getContext());
+        database = dbHelper.getWritableDatabase();
     }
 
     @Override
@@ -72,6 +87,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         tvname = myView.findViewById(R.id.mine_name);
         tvid = myView.findViewById(R.id.mine_id);
         lunch = myView.findViewById(R.id.mine_button);
+        sw1 = myView.findViewById(R.id.auto_switch);
         cover0 = myView.findViewById(R.id.cover0);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
@@ -79,11 +95,18 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         videoAdapter = new UserVideoAdapter();
         videoAdapter.setOnItemClickListener(this);
 
-        getData(Constants.student_id);
-        //videoAdapter.setData(msg);
+        //getDataFromNetWork(Constants.student_id);
+        getDataFromWatchHistory();
         videoView.setAdapter(videoAdapter);
         tvname.setText(Constants.name);
         tvid.setText(Constants.student_id);
+
+        sw1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constants.auto_upload = sw1.isChecked();
+            }
+        });
 
         swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -91,10 +114,19 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getData(Constants.student_id);
+                        getDataFromWatchHistory();
+                        //getDataFromNetWork(Constants.student_id);
                         swip_refresh_layout.setRefreshing(false);
                     }
                 },2000);
+            }
+        });
+
+        lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CustomRecordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -103,27 +135,27 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
     @Override
     public void onItemCLick0(int position, PostData data) {
-        Toast.makeText(getActivity(), "click on 0 : " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "click on 0 : " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
     }
     @Override
     public void onItemCLick1(int position, PostData data) {
-        Toast.makeText(getActivity(), "click on 1 : " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "click on 1 : " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
     }
     @Override
     public void onItemCLick2(int position, PostData data) {
-        Toast.makeText(getActivity(), "click on 2 : " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "click on 2 : " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
     }
 
-    private void getData(String studentId){
+    private void getDataFromNetWork(String studentId){
         new Thread(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -175,10 +207,50 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MineFragment.this.getActivity(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
         return result;
+    }
+
+    protected void getDataFromWatchHistory(){
+        if (database == null) {
+            return;
+        }
+        List<PostData> result = new LinkedList<>();
+        Cursor cursor = null;
+        try{
+            cursor = database.query(VideoContract.VideoInfo.Name_Table,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    VideoContract.VideoInfo._ID );
+            while(cursor.moveToNext()){
+                String Id = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Post_ID));
+                String studentId = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Student_Attribute));
+                String user_name = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.User_Attribute));
+                String video_url = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Video_Attribute));
+                String imageUrl = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Image_Attribute));
+                String createdAt = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Create_Attribute));
+                String updatedAt = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Update_Attribute));
+                PostData data = new PostData();
+                data.setId(Id);
+                data.setStudentId(studentId);
+                data.setFrom(user_name);
+                data.setVideo_url(video_url);
+                data.setImageUrl(imageUrl);
+                Date date = new Date();
+                data.setCreatedAt(date);
+                data.setUpdatedAtt(date);
+                result.add(data);
+            }
+        } finally {
+            if(cursor != null) cursor.close();
+        }
+        videoAdapter.clearData();
+        videoAdapter.setData(result);
     }
 }

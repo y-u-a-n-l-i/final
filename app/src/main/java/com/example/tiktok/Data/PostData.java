@@ -24,6 +24,10 @@ public class PostData {
     @SerializedName("updatedAt")
     private Date updatedAt;
 
+    public PostData(){
+        imageH = imageW = 0;
+    }
+
     public void setId(String Id) {
         this.Id = Id;
     }
@@ -95,6 +99,8 @@ public class PostData {
     public Date getUpdatedAt() {
         return updatedAt;
     }
+
+
 //    @SerializedName("_id")
 //    private String Id;
 //    @SerializedName("student_id")

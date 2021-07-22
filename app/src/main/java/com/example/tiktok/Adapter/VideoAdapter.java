@@ -45,13 +45,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(VideoViewHolder holder, final int position) {
         PostData data0, data1;
-        if(position*2<mDataset.size()){
+        if(position * 2 < mDataset.size()){
             data0 = mDataset.get (position * 2);
         }else{
             data0 = null;
         }
-        if(position*2+1<mDataset.size()){
-            data1 = mDataset.get (position * 2+1);
+        if(position * 2 + 1 < mDataset.size()){
+            data1 = mDataset.get (position * 2 + 1);
         }else{
             data1 = null;
         }
@@ -60,7 +60,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemCLickLeft(position, mDataset.get(position*2));
+                    mItemClickListener.onItemCLickLeft(position, mDataset.get(position * 2));
                 }
             }
         });
@@ -68,7 +68,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemCLickRight(position, mDataset.get(position*2+1));
+                    mItemClickListener.onItemCLickRight(position, mDataset.get(position * 2 + 1));
                 }
             }
 
@@ -77,7 +77,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public int getItemCount() {
-        return (mDataset.size()+1)/2;
+        return (mDataset.size() + 1) / 2;
     }
 
     public interface IOnItemClickListener {
@@ -86,10 +86,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         void onItemCLickRight(int position, PostData data);
     }
-
-//    public VideoAdapter(List<Data> myDataset) {
-//        mDataset.addAll(myDataset);
-//    }
 
     public void setOnItemClickListener(IOnItemClickListener listener) {
         mItemClickListener = listener;

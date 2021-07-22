@@ -89,7 +89,7 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
 
     @Override
     public void onItemCLickLeft(int position, PostData data) {
-        Toast.makeText(this.getActivity(),"click on the left on: " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(),"click on the left on: " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
@@ -97,7 +97,7 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
 
     @Override
     public void onItemCLickRight(int position, PostData data) {
-        Toast.makeText(this.getActivity(),"click on the right on: " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(),"click on the right on: " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
@@ -154,7 +154,7 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VideoFragment.this.getActivity(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

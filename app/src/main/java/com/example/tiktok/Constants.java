@@ -6,4 +6,6 @@ public class Constants {
 
     public static String student_id;
     public static String name;
+
+    public static boolean auto_upload;
 }

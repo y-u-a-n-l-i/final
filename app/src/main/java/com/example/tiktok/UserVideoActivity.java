@@ -74,21 +74,21 @@ public class UserVideoActivity extends AppCompatActivity implements UserVideoAda
 
     @Override
     public void onItemCLick0(int position, PostData data) {
-        Toast.makeText(this, "click on 0 : " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "click on 0 : " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(this, VideoPlayActivity.class);
         startActivity(intent);
     }
     @Override
     public void onItemCLick1(int position, PostData data) {
-        Toast.makeText(this, "click on 1 : " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "click on 1 : " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(this, VideoPlayActivity.class);
         startActivity(intent);
     }
     @Override
     public void onItemCLick2(int position, PostData data) {
-        Toast.makeText(this, "click on 2 : " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "click on 2 : " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(this, VideoPlayActivity.class);
         startActivity(intent);

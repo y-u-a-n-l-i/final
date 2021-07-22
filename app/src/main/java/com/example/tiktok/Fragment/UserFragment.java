@@ -1,6 +1,8 @@
 package com.example.tiktok.Fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -23,21 +25,29 @@ import com.example.tiktok.Constants;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
+import com.example.tiktok.Database.VideoContract;
+import com.example.tiktok.Database.VideoDbHelper;
 import com.example.tiktok.R;
 import com.example.tiktok.UserVideoActivity;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.IDN;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.tiktok.Database.VideoContract.VideoInfo;
 
 public class UserFragment extends Fragment implements UserAdapter.IOnItemClickListener {
 
@@ -67,8 +77,7 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
         userAdapter = new UserAdapter();
         userAdapter.setOnItemClickListener(this);
 
-        getData(null);
-        //userAdapter.setData(msg);
+        getDataFromNetwork(null);
         userView.setAdapter(userAdapter);
 
         swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,7 +86,7 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getData(null);
+                        getDataFromNetwork(null);
                         swip_refresh_layout.setRefreshing(false);
                     }
                 },2000);
@@ -95,7 +104,7 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
         startActivity(intent);
     }
 
-    private void getData(String studentId) {
+    private void getDataFromNetwork(String studentId) {
         new Thread(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -146,10 +155,12 @@ public class UserFragment extends Fragment implements UserAdapter.IOnItemClickLi
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserFragment.this.getActivity(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
         return result;
     }
+
+
 }
