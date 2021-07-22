@@ -42,7 +42,7 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
 
     private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
-    private VideoAdapter videoAdapter;
+    private VideoAdapter videoAdapter = new VideoAdapter();
     private SwipeRefreshLayout swip_refresh_layout;
 
     public VideoFragment() {
@@ -64,7 +64,6 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
-        videoAdapter = new VideoAdapter();
         videoAdapter.setOnItemClickListener(this);
 
         getData(null);

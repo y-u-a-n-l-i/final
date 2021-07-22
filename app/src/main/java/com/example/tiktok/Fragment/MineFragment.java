@@ -23,8 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.example.tiktok.Adapter.UserVideoAdapter;
 import com.example.tiktok.Constants;
+import com.example.tiktok.CustomRecordActivity;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
@@ -50,7 +53,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
 
     private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
-    private UserVideoAdapter videoAdapter;
+    private UserVideoAdapter videoAdapter = new UserVideoAdapter();
     private TextView tvname;
     private TextView tvid;
     private ImageView cover0;
@@ -81,14 +84,20 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
-        videoAdapter = new UserVideoAdapter();
         videoAdapter.setOnItemClickListener(this);
-        Constants.auto_upload = sw1.isChecked();
+
         getData(Constants.student_id);
         //videoAdapter.setData(msg);
         videoView.setAdapter(videoAdapter);
         tvname.setText(Constants.name);
         tvid.setText(Constants.student_id);
+
+        sw1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constants.auto_upload = sw1.isChecked();
+            }
+        });
 
         swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -114,7 +123,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         lunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RecordActivity.class);
+                Intent intent = new Intent(getActivity(), CustomRecordActivity.class);
                 startActivity(intent);
             }
         });
@@ -152,13 +161,14 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
             public void run() {
                 msg.clear();
                 msg = baseGetDataFromRemote(studentId);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
                 if (msg != null && !msg.isEmpty()) {
                     new Handler(getActivity().getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             videoAdapter.clearData();
                             videoAdapter.setData(msg);
-                            Glide.with(MineFragment.this).load(msg.get(0).getImageUrl()).into(cover0);
+                            Glide.with(MineFragment.this).load(msg.get(0).getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cover0);
                         }
                     });
                 }

@@ -51,7 +51,6 @@ public class UserVideoActivity extends AppCompatActivity implements UserVideoAda
         userView = findViewById(R.id.uservideo_recycle);
         userView.setLayoutManager(new LinearLayoutManager(this));
         userView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
-        userAdapter = new UserVideoAdapter();
         userAdapter.setOnItemClickListener(this);
         userView.setAdapter(userAdapter);
         getData();

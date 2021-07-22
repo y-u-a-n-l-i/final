@@ -204,8 +204,6 @@ public class RecordActivity extends AppCompatActivity {
                         uploadData();
                     }
                 }).start();
-                Intent intent = new Intent(RecordActivity.this,MiddleActivity.class);
-                startActivity(intent);
             }
         }
     }

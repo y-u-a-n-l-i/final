@@ -11,6 +11,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.R;
 
@@ -119,22 +123,24 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             if(dataLeft!=null) {
                 tvLeft.setText(dataLeft.getFrom() + "  " + dataLeft.getUpdatedAt());
 //                cLeft.setImageURI(dataLeft.getImageUrl());
-                Glide.with(contentView).load(dataLeft.getImageUrl()).into(cLeft);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                Glide.with(contentView).load(dataLeft.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cLeft);
             }else{
                 tvLeft.setText("");
-                tvLeft.setAlpha(0.0f);
+//                tvLeft.setAlpha(0.0f);
                 bLeft.setEnabled(false);
-                cLeft.setAlpha(0.0f);
+//                cLeft.setAlpha(0.0f);
             }
             if(dataRight != null) {
                 tvRight.setText(dataRight.getFrom() + "  " + dataRight.getUpdatedAt());
 //                cRight.setImageURI(dataRight.getImageUrl());
-                Glide.with(contentView).load(dataRight.getImageUrl()).into(cRight);
+                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                Glide.with(contentView).load(dataRight.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cRight);
             }else{
                 tvRight.setText("");
-                tvRight.setAlpha(0.0f);
+//                tvRight.setAlpha(0.0f);
                 bRight.setEnabled(false);
-                cRight.setAlpha(0.0f);
+//                cRight.setAlpha(0.0f);
             }
         }
 

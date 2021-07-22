@@ -62,13 +62,12 @@ public class MiddleActivity extends AppCompatActivity {
                 return titleList.get(position);
             }
         });
-        // TODO: ex3-2, 添加 TabLayout 支持 Tab
         tab.setupWithViewPager(pager);
 
         lunch0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MiddleActivity.this, RecordActivity.class);
+                Intent intent = new Intent(MiddleActivity.this, CustomRecordActivity.class);
                 startActivity(intent);
             }
         });
