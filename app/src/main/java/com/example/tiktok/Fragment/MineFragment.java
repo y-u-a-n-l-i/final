@@ -33,12 +33,12 @@ import com.example.tiktok.CustomRecordActivity;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
-<<<<<<< HEAD
+
 import com.example.tiktok.Database.VideoContract;
 import com.example.tiktok.Database.VideoDbHelper;
-=======
+
 import com.example.tiktok.MiddleActivity;
->>>>>>> origin/master
+
 import com.example.tiktok.R;
 import com.example.tiktok.RecordActivity;
 import com.example.tiktok.VideoPlayActivity;
@@ -69,7 +69,6 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     private Button lunch;
     private Switch sw1;
     private SwipeRefreshLayout swip_refresh_layout;
-    private Switch sw1;
 
     //database
     private VideoDbHelper dbHelper;
@@ -122,20 +121,20 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-<<<<<<< HEAD
+
                         getDataFromWatchHistory();
                         //getDataFromNetWork(Constants.student_id);
-=======
+
                         try{
                             try{
-                                getData(Constants.student_id);
+                                getDataFromNetWork(Constants.student_id);
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
                         }catch(Exception e){
                             e.printStackTrace();
                         }
->>>>>>> origin/master
+
                         swip_refresh_layout.setRefreshing(false);
                     }
                 },3000);

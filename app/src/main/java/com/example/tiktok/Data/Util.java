@@ -1,4 +1,4 @@
-package com.example.tiktok;
+package com.example.tiktok.Data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

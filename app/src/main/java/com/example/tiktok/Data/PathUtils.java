@@ -1,4 +1,4 @@
-package com.example.tiktok;
+package com.example.tiktok.Data;
 
 import android.content.Context;
 import android.graphics.Bitmap;

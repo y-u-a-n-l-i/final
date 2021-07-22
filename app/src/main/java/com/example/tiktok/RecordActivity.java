@@ -15,14 +15,14 @@ import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.tiktok.Data.PostData;
+import com.example.tiktok.Data.PathUtils;
 import com.example.tiktok.Data.PostDataListResponse;
+import com.example.tiktok.Data.PostData_api;
 
 import java.io.File;
 import java.io.FileNotFoundException;
