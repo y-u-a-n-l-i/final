@@ -1,5 +1,6 @@
 package com.example.tiktok;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
@@ -8,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +61,10 @@ public class VideoPlayActivity extends AppCompatActivity {
     private VideoDbHelper dbHelper;
     private SQLiteDatabase database;
 
+    private static int PAUSE = 0;
+    private static int PLAY = 1;
+    private static Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,33 +81,9 @@ public class VideoPlayActivity extends AppCompatActivity {
         VideoPlayer.getBackButton().setVisibility(View.GONE);
 
         ScreenButton = findViewById(R.id.screen_button);
-        ScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(VideoPlayer.getGSYVideoManager().isPlaying()){
-                    VideoPlayer.onVideoPause();
-                    VideoPlayer.PauseState();
-                }
-                else if(VideoPlayer.isInPlayingState()){
-                    VideoPlayer.PlayState();
-                    VideoPlayer.onVideoResume(false);
-                }
-            }
-        });
-
-        Heart = findViewById(R.id.heart);
-        Heart.setOnDoubleClickListener(new OnDoubleClickListener() {
-            @Override
-            public void onDoubleClick(View view) {
-                VideoPlayer.PlayState();
-                VideoPlayer.onVideoResume(false);
-                //Toast.makeText(VideoPlayActivity.this, "双击了", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Heart.setOnSimpleClickListener(new OnSimpleClickListener() {
-            @Override
-            public void onSimpleClick(View view) {
+//        ScreenButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 //                if(VideoPlayer.getGSYVideoManager().isPlaying()){
 //                    VideoPlayer.onVideoPause();
 //                    VideoPlayer.PauseState();
@@ -109,6 +92,44 @@ public class VideoPlayActivity extends AppCompatActivity {
 //                    VideoPlayer.PlayState();
 //                    VideoPlayer.onVideoResume(false);
 //                }
+//            }
+//        });
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == PAUSE){
+                    VideoPlayer.onVideoPause();
+                    VideoPlayer.PauseState();
+                }
+                else if(msg.what == PLAY){
+                    VideoPlayer.PlayState();
+                    VideoPlayer.onVideoResume(false);
+                }
+            }
+        };
+
+        Heart = findViewById(R.id.heart);
+        Heart.setOnDoubleClickListener(new OnDoubleClickListener() {
+            @Override
+            public void onDoubleClick(View view) {
+            }
+        });
+
+        Heart.setOnSimpleClickListener(new OnSimpleClickListener() {
+            @Override
+            public void onSimpleClick(View view) {
+                if(VideoPlayer.getGSYVideoManager().isPlaying()){
+                    Message msg = new Message();
+                    msg.what = PAUSE;
+                    handler.sendMessage(msg);
+                }
+                else if(VideoPlayer.isInPlayingState()){
+                    Message msg = new Message();
+                    msg.what = PLAY;
+                    handler.sendMessage(msg);
+                }
             }
         });
 
