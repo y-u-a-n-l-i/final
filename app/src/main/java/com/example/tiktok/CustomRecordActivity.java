@@ -105,11 +105,11 @@ public class CustomRecordActivity extends AppCompatActivity implements SurfaceHo
             public void onClick(View v) {
                 mCamera.cancelAutoFocus();
                 mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                                      @Override
-                                      public void onAutoFocus(boolean success, Camera camera) {
+                          @Override
+                          public void onAutoFocus(boolean success, Camera camera) {
 
-                                      }
-                                  }
+                          }
+                      }
                 );
             }
         });
