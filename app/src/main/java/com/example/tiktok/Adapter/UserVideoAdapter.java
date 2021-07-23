@@ -142,6 +142,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             if(data0 != null) {
                 tv0.setText(data0.getUpdatedAt().toString());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                c0.setVisibility(View.VISIBLE);
                 Glide.with(contentView).load(data0.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c0);
             }else{
                 tv0.setText("");
@@ -151,6 +152,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             if(data1 != null) {
                 tv1.setText(data1.getUpdatedAt().toString());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                c1.setVisibility(View.VISIBLE);
                 Glide.with(contentView).load(data1.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c1);
             }else{
                 tv1.setText("");
@@ -160,6 +162,7 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
             if(data2 != null) {
                 tv2.setText(data2.getUpdatedAt().toString());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                c2.setVisibility(View.VISIBLE);
                 Glide.with(contentView).load(data2.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c2);
             }else{
                 System.out.println("data2 == null "+position);

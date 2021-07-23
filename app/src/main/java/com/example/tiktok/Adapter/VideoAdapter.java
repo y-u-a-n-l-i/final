@@ -120,9 +120,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 tvLeft.setText(dataLeft.getFrom() + "  " + dataLeft.getUpdatedAt());
 //                cLeft.setImageURI(dataLeft.getImageUrl());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                cLeft.setVisibility(View.VISIBLE);
                 Glide.with(contentView).load(dataLeft.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cLeft);
             }else{
                 tvLeft.setText("");
+                cLeft.setVisibility(View.INVISIBLE);
 //                tvLeft.setAlpha(0.0f);
                 bLeft.setEnabled(false);
 //                cLeft.setAlpha(0.0f);
@@ -131,9 +133,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 tvRight.setText(dataRight.getFrom() + "  " + dataRight.getUpdatedAt());
 //                cRight.setImageURI(dataRight.getImageUrl());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
+                cRight.setVisibility(View.VISIBLE);
                 Glide.with(contentView).load(dataRight.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cRight);
             }else{
                 tvRight.setText("");
+                cRight.setVisibility(View.INVISIBLE);
 //                tvRight.setAlpha(0.0f);
                 bRight.setEnabled(false);
 //                cRight.setAlpha(0.0f);
