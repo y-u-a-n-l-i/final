@@ -5,14 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +16,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
@@ -33,9 +32,7 @@ import com.example.tiktok.CustomRecordActivity;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
-
 import com.example.tiktok.Database.VideoContract;
-
 import com.example.tiktok.Database.VideoDbHelper;
 import com.example.tiktok.R;
 import com.example.tiktok.VideoPlayActivity;
@@ -53,8 +50,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemClickListener{
-
+public class HistoryFragment extends Fragment implements UserVideoAdapter.IOnItemClickListener{
     private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
     private UserVideoAdapter videoAdapter = new UserVideoAdapter();
@@ -69,14 +65,14 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     private VideoDbHelper dbHelper;
     private SQLiteDatabase HistoryDatabase;
 
-    public MineFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new VideoDbHelper(MineFragment.this.getContext());
+        dbHelper = new VideoDbHelper(HistoryFragment.this.getContext());
         HistoryDatabase = dbHelper.getWritableDatabase();
     }
 
@@ -97,7 +93,6 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
         videoAdapter.setOnItemClickListener(this);
 
-        //getDataFromNetWork(Constants.student_id);
         getDataFromWatchHistory();
         videoView.setAdapter(videoAdapter);
         tvname.setText(Constants.name);
@@ -119,7 +114,6 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                         try{
                             try{
                                 getDataFromWatchHistory();
-                                //getDataFromNetWork(Constants.student_id);
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -152,7 +146,6 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         return myView;
     }
 
-
     @Override
     public void onItemCLick0(int position, PostData data) {
         //Toast.makeText(getActivity(), "click on 0 : " + position, Toast.LENGTH_SHORT).show();
@@ -173,66 +166,6 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
-    }
-
-    private void getDataFromNetWork(String studentId){
-        new Thread(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void run() {
-                msg.clear();
-                msg = baseGetDataFromRemote(studentId);
-                DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
-                if (msg != null && !msg.isEmpty()) {
-                    new Handler(getActivity().getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            videoAdapter.clearData();
-                            videoAdapter.setData(msg);
-                            Glide.with(MineFragment.this).load(msg.get(0).getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(cover0);
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<PostData> baseGetDataFromRemote(String studentId) {
-        String urlStr = String.format(Constants.BASE_URL + "video");
-        List<PostData> result = null;
-        try {
-            URL url;
-            if(studentId != null) url = new URL(urlStr + "?" + "student_id=" + studentId);
-            else url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(6000);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("token", Constants.token);
-
-            if (conn.getResponseCode() == 200) {
-
-                InputStream in = conn.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                PostDataListResponse msg;
-                msg = new Gson().fromJson(reader, new TypeToken<PostDataListResponse>() {
-                }.getType());
-                result = msg.feeds;
-                reader.close();
-                in.close();
-            }
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(MineFragment.this.getActivity(), "error network" + e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        return result;
     }
 
     protected void getDataFromWatchHistory(){

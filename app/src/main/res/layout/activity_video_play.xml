@@ -119,17 +119,13 @@
         tools:layout_conversion_absoluteHeight="19dp"
         tools:layout_conversion_absoluteWidth="50dp" />
 
-    <com.yqw.hotheart.HeartFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <com.yqw.hotheart.HeartFrameLayout
         android:id="@+id/heart"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        app:layout_constraintTop_toTopOf="@+id/main_player"
         tools:context=".MainActivity">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-            //android:src="@mipmap/collect"
+
     </com.yqw.hotheart.HeartFrameLayout>
 
 

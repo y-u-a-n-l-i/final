@@ -147,6 +147,7 @@ public class MyVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     public void PauseState(){
+        setViewShowState(mBottomContainer, VISIBLE);
         setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mTitleTextView, INVISIBLE);
         setViewShowState(mBackButton, VISIBLE);

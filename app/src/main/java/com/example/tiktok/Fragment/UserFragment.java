@@ -1,9 +1,6 @@
 package com.example.tiktok.Fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.tiktok.Adapter.UserAdapter;
@@ -27,29 +23,19 @@ import com.example.tiktok.Constants;
 import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataListResponse;
 import com.example.tiktok.Data.PostDataUtil;
-import com.example.tiktok.Database.VideoContract;
-import com.example.tiktok.Database.VideoDbHelper;
 import com.example.tiktok.R;
 import com.example.tiktok.UserVideoActivity;
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.IDN;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-
-import com.example.tiktok.Database.VideoContract.VideoInfo;
 
 public class UserFragment extends Fragment implements UserAdapter.IOnItemClickListener {
 

@@ -1,36 +1,29 @@
 package com.example.tiktok;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
-import android.database.DatabaseUtils;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import com.example.tiktok.Data.PostData;
 import com.example.tiktok.Data.PostDataUtil;
 import com.example.tiktok.Database.VideoContract;
 import com.example.tiktok.Database.VideoDbHelper;
 import com.example.tiktok.View.FlowLikeView;
 import com.example.tiktok.View.MyVideoPlayer;
 import com.google.android.exoplayer2.SeekParameters;
-import com.shuyu.gsyvideoplayer.GSYVideoADManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
-import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.yqw.hotheart.HeartFrameLayout;
 import com.yqw.hotheart.minterface.OnDoubleClickListener;
 import com.yqw.hotheart.minterface.OnSimpleClickListener;
@@ -44,63 +37,67 @@ public class VideoPlayActivity extends AppCompatActivity {
     private static final String TAG = "VideoFragment";
     private long CurrentPosition;
     private MyVideoPlayer VideoPlayer;
-    private FlowLikeView LikeView;
+    private View LikeView;
 
     private OrientationUtils orientationUtils;
     private boolean isPlay;
     private boolean isPause;
+    private boolean isLike;
     private CircleImageView CircleImageView;
     private Button ScreenButton;
     private HeartFrameLayout Heart;
     String mockUrl = "https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218114723HDu3hhxqIT.mp4";
 
-    //database
+    //databasedb
     private VideoDbHelper dbHelper;
-    private SQLiteDatabase database;
+    private SQLiteDatabase Database;
+
+    private static int PAUSE = 0;
+    private static int PLAY = 1;
+    private static Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
 
-        //更新历史记录
         dbHelper = new VideoDbHelper(this);
-        database = dbHelper.getWritableDatabase();
+        Database = dbHelper.getWritableDatabase();
         InsertVideoIntoHistory();
+
+
 
         CurrentPosition = 0;
         VideoPlayer = findViewById(R.id.main_player);
         VideoPlayer.getTitleTextView().setVisibility(View.GONE);
         VideoPlayer.getBackButton().setVisibility(View.GONE);
 
-        ScreenButton = findViewById(R.id.screen_button);
-        ScreenButton.setOnClickListener(new View.OnClickListener() {
+        LikeView = findViewById(R.id.icon_heart);
+        CheckIfLiked();
+        LikeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(VideoPlayer.getGSYVideoManager().isPlaying()){
-                    VideoPlayer.onVideoPause();
-                    VideoPlayer.PauseState();
+                if(isLike){
+                    Toast.makeText(VideoPlayActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                    Drawable heart = getDrawable(R.mipmap.icon_heart);
+                    LikeView.setBackground(heart);
+                    isLike = false;
+                    DeleteFromLike();
                 }
-                else if(VideoPlayer.isInPlayingState()){
-                    VideoPlayer.PlayState();
-                    VideoPlayer.onVideoResume(false);
+                else{
+                    Toast.makeText(VideoPlayActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                    Drawable heart = getDrawable(R.mipmap.icon_heart_red);
+                    LikeView.setBackground(heart);
+                    isLike = true;
+                    InsertIntoLike();
                 }
             }
         });
 
-        Heart = findViewById(R.id.heart);
-        Heart.setOnDoubleClickListener(new OnDoubleClickListener() {
-            @Override
-            public void onDoubleClick(View view) {
-                VideoPlayer.PlayState();
-                VideoPlayer.onVideoResume(false);
-                //Toast.makeText(VideoPlayActivity.this, "双击了", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Heart.setOnSimpleClickListener(new OnSimpleClickListener() {
-            @Override
-            public void onSimpleClick(View view) {
+        ScreenButton = findViewById(R.id.screen_button);
+//        ScreenButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 //                if(VideoPlayer.getGSYVideoManager().isPlaying()){
 //                    VideoPlayer.onVideoPause();
 //                    VideoPlayer.PauseState();
@@ -109,8 +106,52 @@ public class VideoPlayActivity extends AppCompatActivity {
 //                    VideoPlayer.PlayState();
 //                    VideoPlayer.onVideoResume(false);
 //                }
+//            }
+//        });
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == PAUSE){
+                    VideoPlayer.onVideoPause();
+                    VideoPlayer.PauseState();
+                }
+                else if(msg.what == PLAY){
+                    VideoPlayer.PlayState();
+                    VideoPlayer.onVideoResume(false);
+                }
+                else{
+                    VideoPlayer.PlayState();
+                    VideoPlayer.onVideoResume(false);
+                }
+            }
+        };
+
+        Heart = findViewById(R.id.heart);
+        Heart.setOnDoubleClickListener(new OnDoubleClickListener() {
+            @Override
+            public void onDoubleClick(View view) {
             }
         });
+
+        Heart.setOnSimpleClickListener(new OnSimpleClickListener() {
+            @Override
+            public void onSimpleClick(View view) {
+                if(VideoPlayer.getGSYVideoManager().isPlaying()){
+                    Message msg = new Message();
+                    msg.what = PAUSE;
+                    handler.sendMessage(msg);
+                }
+                else if(VideoPlayer.isInPlayingState()){
+                    Message msg = new Message();
+                    msg.what = PLAY;
+                    handler.sendMessage(msg);
+                }
+            }
+        });
+
+
 
         orientationUtils = new OrientationUtils(VideoPlayActivity.this, VideoPlayer);
         orientationUtils.setEnable(false);
@@ -189,6 +230,10 @@ public class VideoPlayActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Database.close();
+        Database = null;
+        dbHelper.close();
+        dbHelper = null;
         //GSYVideoADManager.releaseAllVideos();
         if(VideoPlayer.getGSYVideoManager().isPlaying()){
             VideoPlayer.getCurrentPlayer().release();
@@ -197,9 +242,15 @@ public class VideoPlayActivity extends AppCompatActivity {
     }
 
     void InsertVideoIntoHistory(){
-        String selection = VideoInfo._ID + " = ?";
-        String[] selectionArgs = new String[]{"0"};
-        database.delete(VideoInfo.Name_Table, selection, selectionArgs);
+        Cursor cursor = Database.query(VideoInfo.History_Table, null, null, null,
+                null, null, VideoContract.VideoInfo._ID + " DESC");
+        if(cursor.getCount() > 8){
+            cursor.move(cursor.getCount());
+            String Id = cursor.getString(cursor.getColumnIndex(VideoInfo._ID));
+            String selection = VideoInfo._ID + " = ?";
+            String[] selectionArgs = new String[]{Id};
+            Database.delete(VideoInfo.History_Table, selection, selectionArgs);
+        }
 
         ContentValues values = new ContentValues();
         values.put(VideoInfo.Post_ID, PostDataUtil.data.getId());
@@ -209,7 +260,49 @@ public class VideoPlayActivity extends AppCompatActivity {
         values.put(VideoInfo.Video_Attribute, PostDataUtil.data.getVideo_url());
         values.put(VideoInfo.Create_Attribute, String.valueOf(PostDataUtil.data.getCreatedAt()));
         values.put(VideoInfo.Update_Attribute, String.valueOf(PostDataUtil.data.getUpdatedAt()));
-        database.insert(VideoInfo.Name_Table, null, values);
+        String selection = VideoInfo.Post_ID + " = ?";
+        String[] selectionArgs = new String[]{PostDataUtil.data.getId()};
+        Database.delete(VideoInfo.History_Table, selection, selectionArgs);
+        Database.insert(VideoInfo.History_Table, null, values);
     }
 
+    void CheckIfLiked(){
+        String selection = VideoInfo.Post_ID + " = ?";
+        String[] selectionArgs = new String[]{PostDataUtil.data.getId()};
+        Cursor cursor = Database.query(VideoInfo.Save_Table,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+        if(cursor.getCount() != 0){
+            isLike = true;
+            Drawable heart = getDrawable(R.mipmap.icon_heart_red);
+            LikeView.setBackground(heart);
+        }
+        else{
+            isLike = false;
+            Drawable heart = getDrawable(R.mipmap.icon_heart);
+            LikeView.setBackground(heart);
+        }
+    }
+
+    void InsertIntoLike(){
+        ContentValues values = new ContentValues();
+        values.put(VideoInfo.Post_ID, PostDataUtil.data.getId());
+        values.put(VideoInfo.Student_Attribute, PostDataUtil.data.getStudentId());
+        values.put(VideoInfo.User_Attribute, PostDataUtil.data.getFrom());
+        values.put(VideoInfo.Image_Attribute, PostDataUtil.data.getImageUrl());
+        values.put(VideoInfo.Video_Attribute, PostDataUtil.data.getVideo_url());
+        values.put(VideoInfo.Create_Attribute, String.valueOf(PostDataUtil.data.getCreatedAt()));
+        values.put(VideoInfo.Update_Attribute, String.valueOf(PostDataUtil.data.getUpdatedAt()));
+        Database.insert(VideoInfo.Save_Table, null, values);
+    }
+
+    void DeleteFromLike(){
+        String selection = VideoInfo.Post_ID + " = ?";
+        String[] selectionArgs = new String[]{PostDataUtil.data.getId()};
+        Database.delete(VideoInfo.Save_Table, selection, selectionArgs);
+    }
 }

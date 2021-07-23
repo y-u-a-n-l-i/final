@@ -59,7 +59,7 @@ public class VideoFragment extends Fragment implements VideoAdapter.IOnItemClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_video, container, false);
-        swip_refresh_layout=myView.findViewById(R.id.video_swipe);
+        swip_refresh_layout = myView.findViewById(R.id.video_swipe);
         videoView = myView.findViewById(R.id.video_recycle);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
