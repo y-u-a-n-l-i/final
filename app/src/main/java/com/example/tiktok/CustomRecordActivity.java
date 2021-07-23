@@ -100,6 +100,20 @@ public class CustomRecordActivity extends AppCompatActivity implements SurfaceHo
         initCamera();
         mHolder.addCallback(this);
 
+        mSurfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCamera.cancelAutoFocus();
+                mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                          @Override
+                          public void onAutoFocus(boolean success, Camera camera) {
+
+                          }
+                      }
+                );
+            }
+        });
+
         mChooseVideoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
