@@ -64,9 +64,6 @@ public class VideoPlayActivity extends AppCompatActivity {
         dbHelper = new VideoDbHelper(this);
         Database = dbHelper.getWritableDatabase();
         InsertVideoIntoHistory();
-
-
-
         CurrentPosition = 0;
         VideoPlayer = findViewById(R.id.main_player);
         VideoPlayer.getTitleTextView().setVisibility(View.GONE);
@@ -242,16 +239,6 @@ public class VideoPlayActivity extends AppCompatActivity {
     }
 
     void InsertVideoIntoHistory(){
-        Cursor cursor = Database.query(VideoInfo.History_Table, null, null, null,
-                null, null, VideoContract.VideoInfo._ID + " DESC");
-        if(cursor.getCount() > 8){
-            cursor.move(cursor.getCount());
-            String Id = cursor.getString(cursor.getColumnIndex(VideoInfo._ID));
-            String selection = VideoInfo._ID + " = ?";
-            String[] selectionArgs = new String[]{Id};
-            Database.delete(VideoInfo.History_Table, selection, selectionArgs);
-        }
-
         ContentValues values = new ContentValues();
         values.put(VideoInfo.Post_ID, PostDataUtil.data.getId());
         values.put(VideoInfo.Student_Attribute, PostDataUtil.data.getStudentId());
@@ -264,6 +251,16 @@ public class VideoPlayActivity extends AppCompatActivity {
         String[] selectionArgs = new String[]{PostDataUtil.data.getId()};
         Database.delete(VideoInfo.History_Table, selection, selectionArgs);
         Database.insert(VideoInfo.History_Table, null, values);
+
+        Cursor cursor = Database.query(VideoInfo.History_Table, null, null, null,
+                null, null, VideoContract.VideoInfo._ID + " DESC");
+        if(cursor.getCount() > 9){
+            cursor.move(cursor.getCount());
+            String Post_Id = cursor.getString(cursor.getColumnIndex(VideoInfo.Post_ID));
+            selection = VideoInfo.Post_ID + " = ?";
+            selectionArgs = new String[]{Post_Id};
+            Database.delete(VideoInfo.History_Table, selection, selectionArgs);
+        }
     }
 
     void CheckIfLiked(){

@@ -104,7 +104,7 @@ public class HistoryFragment extends Fragment implements UserVideoAdapter.IOnIte
 
                         swip_refresh_layout.setRefreshing(false);
                     }
-                },3000);
+                },2000);
             }
         });
         return myView;
@@ -139,6 +139,20 @@ public class HistoryFragment extends Fragment implements UserVideoAdapter.IOnIte
         List<PostData> result = new LinkedList<>();
         Cursor cursor = null;
         try{
+            cursor = Database.query(VideoContract.VideoInfo.History_Table,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    VideoContract.VideoInfo._ID + " DESC");
+            if(cursor.getCount() > 9){
+                cursor.move(cursor.getCount());
+                String Post_Id = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Post_ID));
+                String selection = VideoContract.VideoInfo.Post_ID + " = ?";
+                String[] selectionArgs = new String[]{Post_Id};
+                Database.delete(VideoContract.VideoInfo.History_Table, selection, selectionArgs);
+            }
             cursor = Database.query(VideoContract.VideoInfo.History_Table,
                     null,
                     null,
