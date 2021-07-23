@@ -48,18 +48,18 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
     public void onBindViewHolder(UserVideoAdapter.UserVideoViewHolder holder, final int position) {
         PostData data0, data1,data2;
         System.out.println(position);
-        if(position*3<mDataset.size()){
+        if(position * 3 < mDataset.size()){
             data0 = mDataset.get (position * 3);
         }else{
             data0 = null;
         }
-        if(position*3+1<mDataset.size()){
-            data1 = mDataset.get (position * 3+1);
+        if(position * 3 + 1 < mDataset.size()){
+            data1 = mDataset.get (position * 3 + 1);
         }else{
             data1 = null;
         }
         if(position*3+2<mDataset.size()){
-            data2 = mDataset.get (position * 3+2);
+            data2 = mDataset.get (position * 3 + 2);
         }else{
             data2 = null;
         }
