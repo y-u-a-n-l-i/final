@@ -36,7 +36,7 @@ public class VideoDbHelper extends SQLiteOpenHelper {
         if(!cursor.moveToNext()) db.execSQL(VideoContract.CREATE_History_SQL);
 
         selectionArgs = new String[]{VideoContract.VideoInfo.Save_Table};
-         cursor = db.query("sqlite_master",
+        cursor = db.query("sqlite_master",
                 null,
                 selection,
                 selectionArgs,

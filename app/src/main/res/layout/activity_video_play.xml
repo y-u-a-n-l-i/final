@@ -22,13 +22,11 @@
         tools:layout_conversion_absoluteHeight="731dp"
         tools:layout_conversion_absoluteWidth="411dp">
 
-
         <Button
             android:id="@+id/screen_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0" />
-
 
     </com.example.tiktok.View.MyVideoPlayer>
 

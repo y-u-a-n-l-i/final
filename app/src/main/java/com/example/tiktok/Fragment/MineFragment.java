@@ -37,6 +37,7 @@ import com.example.tiktok.Data.PostDataUtil;
 import com.example.tiktok.Database.VideoContract;
 
 import com.example.tiktok.Database.VideoDbHelper;
+import com.example.tiktok.DetailActivity;
 import com.example.tiktok.R;
 import com.example.tiktok.VideoPlayActivity;
 import com.google.gson.Gson;
@@ -58,16 +59,13 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
     private UserVideoAdapter videoAdapter = new UserVideoAdapter();
-    private TextView tvname;
-    private TextView tvid;
+    private TextView tvName;
+    private TextView tvId;
     private ImageView cover0;
     private Button lunch;
+    private Button detail;
     private Switch sw1;
     private SwipeRefreshLayout swip_refresh_layout;
-
-    //database
-    private VideoDbHelper dbHelper;
-    private SQLiteDatabase HistoryDatabase;
 
     public MineFragment() {
         // Required empty public constructor
@@ -76,8 +74,6 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new VideoDbHelper(MineFragment.this.getContext());
-        HistoryDatabase = dbHelper.getWritableDatabase();
     }
 
     @Override
@@ -86,22 +82,23 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         View myView = inflater.inflate(R.layout.fragment_mine, container, false);
         swip_refresh_layout=myView.findViewById(R.id.mine_swipe);
         videoView = myView.findViewById(R.id.mine_recycle);
-        tvname = myView.findViewById(R.id.mine_name);
-        tvid = myView.findViewById(R.id.mine_id);
+        tvName = myView.findViewById(R.id.mine_name);
+        tvId = myView.findViewById(R.id.mine_id);
         lunch = myView.findViewById(R.id.mine_button);
         sw1 = myView.findViewById(R.id.auto_switch);
         cover0 = myView.findViewById(R.id.cover0);
         sw1 = myView.findViewById(R.id.auto_switch);
+        detail = myView.findViewById(R.id.button_detail);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
         videoAdapter.setOnItemClickListener(this);
 
-        //getDataFromNetWork(Constants.student_id);
-        getDataFromWatchHistory();
+        getDataFromNetWork(Constants.student_id);
         videoView.setAdapter(videoAdapter);
-        tvname.setText(Constants.name);
-        tvid.setText(Constants.student_id);
+        tvName.setText(Constants.name);
+        tvId.setText(Constants.student_id);
+
 
         sw1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +115,7 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                     public void run() {
                         try{
                             try{
-                                getDataFromWatchHistory();
-                                //getDataFromNetWork(Constants.student_id);
+                                getDataFromNetWork(Constants.student_id);
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -141,17 +137,16 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
             }
         });
 
-        lunch.setOnClickListener(new View.OnClickListener() {
+        detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CustomRecordActivity.class);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
                 startActivity(intent);
             }
         });
 
         return myView;
     }
-
 
     @Override
     public void onItemCLick0(int position, PostData data) {
@@ -235,43 +230,4 @@ public class MineFragment extends Fragment implements UserVideoAdapter.IOnItemCl
         return result;
     }
 
-    protected void getDataFromWatchHistory(){
-        if (HistoryDatabase == null) {
-            return;
-        }
-        List<PostData> result = new LinkedList<>();
-        Cursor cursor = null;
-        try{
-            cursor = HistoryDatabase.query(VideoContract.VideoInfo.History_Table,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    VideoContract.VideoInfo._ID + " DESC");
-            while(cursor.moveToNext()){
-                String Id = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Post_ID));
-                String studentId = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Student_Attribute));
-                String user_name = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.User_Attribute));
-                String video_url = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Video_Attribute));
-                String imageUrl = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Image_Attribute));
-                String createdAt = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Create_Attribute));
-                String updatedAt = cursor.getString(cursor.getColumnIndex(VideoContract.VideoInfo.Update_Attribute));
-                PostData data = new PostData();
-                data.setId(Id);
-                data.setStudentId(studentId);
-                data.setFrom(user_name);
-                data.setVideo_url(video_url);
-                data.setImageUrl(imageUrl);
-                Date date = new Date();
-                data.setCreatedAt(date);
-                data.setUpdatedAtt(date);
-                result.add(data);
-            }
-        } finally {
-            if(cursor != null) cursor.close();
-        }
-        videoAdapter.clearData();
-        videoAdapter.setData(result);
-    }
 }

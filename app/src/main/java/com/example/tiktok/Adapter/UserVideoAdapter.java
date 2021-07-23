@@ -139,31 +139,31 @@ public class UserVideoAdapter extends RecyclerView.Adapter<UserVideoAdapter.User
         }
 
         public void onBind(int position, PostData data0, PostData data1, PostData data2){
-            if(data0!= null) {
+            if(data0 != null) {
                 tv0.setText(data0.getUpdatedAt().toString());
-//                c0.setImageURI(data0.getImageUrl());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
                 Glide.with(contentView).load(data0.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c0);
             }else{
                 tv0.setText("");
+                c0.setVisibility(View.INVISIBLE);
                 b0.setEnabled(false);
             }
-            if(data1!= null) {
+            if(data1 != null) {
                 tv1.setText(data1.getUpdatedAt().toString());
-//                c1.setImageURI(data1.getImageUrl());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
                 Glide.with(contentView).load(data1.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c1);
             }else{
                 tv1.setText("");
+                c1.setVisibility(View.INVISIBLE);
                 b1.setEnabled(false);
             }
-            if(data2!= null) {
+            if(data2 != null) {
                 tv2.setText(data2.getUpdatedAt().toString());
-//                c2.setImageURI(data2.getImageUrl());
                 DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder(500).setCrossFadeEnabled(true).build();
                 Glide.with(contentView).load(data2.getImageUrl()).transition(DrawableTransitionOptions.with(drawableCrossFadeFactory)).into(c2);
             }else{
                 System.out.println("data2 == null "+position);
+                c2.setVisibility(View.INVISIBLE);
                 tv2.setText("");
                 b2.setEnabled(false);
             }

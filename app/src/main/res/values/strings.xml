@@ -2,4 +2,10 @@
     <string name="app_name">tiktok</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_debug">Debug</string>
+    <string name="action_file_demo">FileDemo</string>
+    <string name="action_sp_demo">SharedPreferenceDemo</string>
+    <string name="action_database_demo">DatabaseDemo</string>
 </resources>

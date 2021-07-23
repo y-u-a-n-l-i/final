@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.tiktok.MiddleActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_debug"
+        android:orderInCategory="100"
+        android:title="@string/action_debug"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_file"
+        android:orderInCategory="100"
+        android:title="@string/action_file_demo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sp"
+        android:orderInCategory="100"
+        android:title="@string/action_sp_demo"
+        app:showAsAction="never" />
+</menu>
