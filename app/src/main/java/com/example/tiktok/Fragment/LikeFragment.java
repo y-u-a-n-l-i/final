@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.tiktok.Adapter.UserVideoAdapter;
+import com.example.tiktok.Adapter.VideoAdapter;
 import com.example.tiktok.Constants;
 import com.example.tiktok.CustomRecordActivity;
 import com.example.tiktok.Data.PostData;
@@ -35,10 +36,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LikeFragment extends Fragment implements UserVideoAdapter.IOnItemClickListener{
+public class LikeFragment extends Fragment implements VideoAdapter.IOnItemClickListener{
     private List<PostData> msg = new ArrayList<>();
     private RecyclerView videoView;
-    private UserVideoAdapter videoAdapter = new UserVideoAdapter();
+    private VideoAdapter videoAdapter = new VideoAdapter();
     private SwipeRefreshLayout swip_refresh_layout;
 
     //database
@@ -60,15 +61,17 @@ public class LikeFragment extends Fragment implements UserVideoAdapter.IOnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_like, container, false);
-        swip_refresh_layout=myView.findViewById(R.id.like_swipe);
+        swip_refresh_layout = myView.findViewById(R.id.like_swipe);
         videoView = myView.findViewById(R.id.like_recycle);
         videoView.setLayoutManager(new LinearLayoutManager(getContext()));
         videoView.setHasFixedSize(true);
         videoView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
         videoAdapter.setOnItemClickListener(this);
 
+        //videoAdapter.setData(msg);
         getDataFromLike();
         videoView.setAdapter(videoAdapter);
+
         swip_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -76,11 +79,7 @@ public class LikeFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                     @Override
                     public void run() {
                         try{
-                            try{
-                                getDataFromLike();
-                            }catch(Exception e){
-                                e.printStackTrace();
-                            }
+                            getDataFromLike();
                         }catch(Exception e){
                             e.printStackTrace();
                         }
@@ -89,30 +88,26 @@ public class LikeFragment extends Fragment implements UserVideoAdapter.IOnItemCl
                 },3000);
             }
         });
+
         return myView;
     }
 
     @Override
-    public void onItemCLick0(int position, PostData data) {
-        //Toast.makeText(getActivity(), "click on 0 : " + position, Toast.LENGTH_SHORT).show();
+    public void onItemCLickLeft(int position, PostData data) {
+        //Toast.makeText(this.getActivity(),"click on the left on: " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
     }
+
     @Override
-    public void onItemCLick1(int position, PostData data) {
-        //Toast.makeText(getActivity(), "click on 1 : " + position, Toast.LENGTH_SHORT).show();
+    public void onItemCLickRight(int position, PostData data) {
+        //Toast.makeText(this.getActivity(),"click on the right on: " + position, Toast.LENGTH_SHORT).show();
         PostDataUtil.data = data;
         Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
         startActivity(intent);
     }
-    @Override
-    public void onItemCLick2(int position, PostData data) {
-        //Toast.makeText(getActivity(), "click on 2 : " + position, Toast.LENGTH_SHORT).show();
-        PostDataUtil.data = data;
-        Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
-        startActivity(intent);
-    }
+
 
     protected void getDataFromLike(){
         if (Database == null) {
